@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Alex">
+    <title>Atlas.Alex</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <link rel="stylesheet" href="styles/atlas.css"> 
+</head>
+<body>
+    <div class="header-bar">
+        <div class="profile-header">
+            <div class="profile-container">
+                <img src="img/profile.jpeg" alt="Profile Picture" class="profile-pic">
+            </div>
+        </div>
+        <div class="nav-menu">
+            <ul>
+                <li><a href="index.html"><i class="fa-solid fa-house"></i></a></li>
+                <li><a href="about-me.html"><i class="fa-solid fa-info"></i></a></li>
+                <li><a href="contact-me.html"><i class="fa-solid fa-phone"></i></a></li>
+                <li><a href="Atlas.html"><i class="fas fa-atlas"></i></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Scrollable Atlas Book -->
+    <div class="atlas">
+        <div class="page-container">
+            <div class="content-wrapper">
+                <div class="skewed-header">
+                    <div class="header-bg" style="background-image: url(img/mount-kenya.jpeg); height: 400px;"></div>
+                    <div class="skewed-header-wrapper">
+                        <div class="skewed-header-content">
+                            <div class="heading-wrapper">
+                                <h1>My Atlas</h1>
+                                <figcaption>~Alex Kimani</figcaption>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page">
+                    <h2>GEOLOGY OF KENYA</h2>
+                    <div class="page-body">
+                        <div class="image-container">
+                            <img src="img/GLG.kenya.png" alt="Map of the Highlands" class="map-image">
+                            <img src="img/africa.glg.png" alt="Map of the Highlands" class="map-image">
+                        </div>
+                        <div class="page-content">
+                            <p>This geological map of Kenya, created using QGIS, visually represents the country’s diverse geological formations. The map categorizes Kenya’s geology into distinct units, each marked by a unique color and label in the legend. These units correspond to different rock types and geological periods, ranging from Precambrian (PC, pCm) to Quaternary (Qe, Qp, QT, Qv) rocks, as well as Jurassic (J, JC, JT, JTr), Cretaceous (K), Miocene (Mi), and Tertiary (T, Ti, TrP) formations. The map also includes water bodies (H2O) and sea areas (SEA).</p>
+                            <div class="facts">
+                                <p><strong>Key features include</strong></p>
+                                <ul>
+                                    <li>Precambrian Rocks (PC,pCm): Predominantly in the western and central regions, indicating ancient basement rocks.</li>
+                                    <li>Quaternary Deposits (Qe, Qp, QT, Qv): Scattered across the country, often associated with volcanic activity and recent sedimentation, especially in the Rift Valley.</li>
+                                    <li>Jurassic and Cretaceous formations (J, JC, JT, JTr, K): Found in the eastern and coastal regions, reflecting sedimentary deposits from those periods.</li>
+                                    <li>Tertiary volcanic and sedimentary rocks (T, Ti, TrP, Mi): Prominent along the central Rift Valley and parts of northern Kenya, associated with volcanic activity and rifting during the Tertiary period.</li>
+                                </ul>
+                                <p>The map includes a scale bar (0–500 km) for distance reference and a north arrow for orientation. It was adapted from the U.S. Geological Survey’s World Energy Project dataset, focusing on Kenya’s geological provinces and oil/gas field potential, with data projected in Mercator using QGIS for enhanced visualization.</p>
+                                <p><strong>Resources</strong></p>
+                                <ul>
+                                    <li><a href="https://pubs.usgs.gov/of/1997/ofr-97-470/OF97-470A/ofr97470A_sheet2.pdf">USGS Sheet 1</a></li>
+                                    <li><a href="https://pubs.usgs.gov/of/1997/ofr-97-470/OF97-470A/ofr97470A_sheet2_plotter.pdf">USGS Sheet 2</a></li>
+                                    <li><a href="https://pubs.usgs.gov/publication/ofr97470A">USGS publication</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page end-page">
+                    <p style="font-style: italic; font-size: 1.5em; margin-top: 50%;">...</p>
+                    <p><a href="#">Back to top</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p class="footer-copyright">Copyright © 2025 Lex.Corp</p>
+    </footer>
+
+    <script>
+        // JavaScript to toggle full-screen on click for .map-image elements
+        document.querySelectorAll('.map-image').forEach(image => {
+            image.addEventListener('click', () => {
+                if (!image.classList.contains('fullscreen')) {
+                    image.classList.add('fullscreen');
+                    image.dataset.originalWidth = image.style.width;
+                    image.dataset.originalHeight = image.style.height;
+                    image.dataset.originalPosition = image.style.position;
+                } else {
+                    image.classList.remove('fullscreen');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

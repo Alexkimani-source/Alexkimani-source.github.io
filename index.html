@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Alex">
+    <title>Home.Alex</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <link rel="stylesheet" href="styles/profile.css"> 
+</head>
+<body>
+    <div class="container">
+        <div class="profile-container">
+            <img src="img/profile.jpeg" alt="Profile Picture" class="profile-pic">
+            <div class="profile-title">hello ,i'm Alex</div>
+        </div>
+        <div class="scroll-arrow">↓</div>
+    </div>
+    <div class="header-bar">
+        <div class="profile-header"></div>
+        <div class="nav-menu">
+            <ul>
+                <li><a href="index.html"><i class="fa-solid fa-house"></i></a></li>
+                <li><a href="about-me.html"><i class="fa-solid fa-info"></i></a></li>
+                <li><a href="contact-me.html"><i class="fa-solid fa-phone"></i></a></li>
+                <li><a href="Atlas.html"><i class="fas fa-atlas"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        <div class="projects-section">
+            <h2>My Projects</h2>
+            <div class="projects-container">
+                <div class="project-box has-image" data-image="img/KARATINA UNIVERSTY MAP.png">
+                    <img src="img/KARATINA UNIVERSTY MAP.png" alt="Project 1 Image">
+                    <span>MY first map</span>
+                    <div class="project-date">Jan 15, 2023</div>
+                </div>
+                <div class="project-box has-video" data-type="youtube" data-video="https://www.youtube.com/embed/03Y7uY4vmpM">
+                    <img src="https://img.youtube.com/vi/03Y7uY4vmpM/hqdefault.jpg" alt="Project 2 Video Thumbnail">
+                    <span>GIS+BLENDER</span>
+                    <div class="project-date">Feb 20, 2025</div>
+                </div>
+                <div class="project-box has-image" data-image="img/myweb.png">
+                    <img src="img/myweb.png" alt="Project 3 Image">
+                    <span>My website</span>
+                    <div class="project-date">March 25, 2025</div>
+                </div>
+                <div class="project-box has-image" data-image="img/GLG.kenya.png">
+                    <img src="img/GLG.kenya.png" alt="Project 4 Image">
+                    <span>Geology of kenya</span>
+                    <div class="project-date">April 2, 2025</div>
+                </div>
+                <div class="project-box no-image">
+                    <span class="project-title">Ball animation</span>
+                    <div class="project-date">In Progress</div>
+                </div>
+                <!--<div class="project-box no-image">
+                    <span class="project-title">Project 5</span>
+                    <div class="project-date">In Progress</div>
+                </div>
+                <div class="project-box has-video" data-type="local" data-video="videos/sample-video.mp4" data-thumbnail="img/sample-thumbnail.jpg">
+                    <img src="img/sample-thumbnail.jpg" alt="Project 6 Video Thumbnail">
+                    <span>Project 6 (Local Video)</span>
+                    <div class="project-date">April 1, 2025</div>
+                </div>-->
+            </div>
+        </div>
+        <div class="modal" id="projectModal">
+            <div class="modal-content" id="modalContent">
+                <button class="close-modal" id="closeModal">×</button>
+            </div>
+        </div>
+        <div class="academic-section">
+            <h2>Academic History</h2>
+            <div class="academic-grid">
+                <div class="academic-container">
+                    <a href="https://www.google.com/search?q=Karatina+University" target="_blank" class="academic-box">
+                        <img src="img/karu1.png" alt="University Logo" class="school-logo">
+                        <div class="school-info">
+                            <h3>Karatina University</h3>
+                            <p>2022 - 2026</p>
+                        </div>
+                    </a>
+                    <a href="https://www.google.com/search?q=Makuyu+Boys+Highschool" target="_blank" class="academic-box">
+                        <img src="img/makb.png" alt="High School Logo" class="school-logo">
+                        <div class="school-info">
+                            <h3>Makuyu Boys' Highschool</h3>
+                            <p>2018 - 2022</p>
+                        </div>
+                    </a>
+                    <a href="https://www.google.com/search?q=Shimo+La+Tewa+Primary+School" target="_blank" class="academic-box">
+                        <img src="img/slt.png" alt="Middle School Logo" class="school-logo">
+                        <div class="school-info">
+                            <h3>Shimo La Tewa Primary School</h3>
+                            <p>2010 - 2018</p>
+                        </div>
+                    </a>
+                    <a href="https://www.google.com/search?q=Bluebell+Kindergarten+Mtwapa" target="_blank" class="academic-box">
+                        <img src="img/bbel.png" alt="Elementary School Logo" class="school-logo">
+                        <div class="school-info">
+                            <h3>Bluebell Kindergarten</h3>
+                            <p>2007 - 2010</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="academic-video">
+                    <img src="img/tom-and-jerry-laugh.gif" alt="Academic Highlights GIF">
+                </div>
+            </div>
+        </div>
+        <div class="licenses-section">
+            <h2>Licenses & Certifications</h2>
+            <div class="licenses-container">
+                <a href="https://alison.com/certification/check/5920a82e73" target="_blank" class="license-box">
+                    <h3>Diploma in Website Development Using HTML and CSS</h3>
+                    <p>Issued by: alison</p>
+                    <div class="license-date">feb 2025</div>
+                </a>
+                <a href="https://www.credly.com/badges/e0a6e3ec-ffc8-4d82-b4c8-607ca83e68c0/linked_in_profile" target="_blank" class="license-box">
+                    <h3>McKinsey.org Forward Program</h3>
+                    <p>Issued by: Mckinsey & company</p>
+                    <div class="license-date">Dec 2024</div>
+                </a>
+                <a href="https://www.linkedin.com/in/stanley-k-02661b265/?originalSubdomain=ke" target="_blank" class="license-box">
+                    <h3>Certificate in computer packages</h3>
+                    <p>Issued by:TOGLA INSTITUTE OT BUSINESS STUDIES</p>
+                    <div class="license-date">Jun 2022</div>
+                </a>
+            </div>
+        </div>
+        <div class="location-section">
+            <h2>My Location</h2>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5860.310262701559!2d37.14121132091717!3d-0.3901442801652384!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x18287b42b792cfdf%3A0x29b26d5ed240b1ae!2sKaratina%20University-%20Main%20Campus!5e0!3m2!1sen!2ske!4v1742816993055!5m2!1sen!2ske" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <footer>
+            <div class="social-media-icons-wrapper">
+                <a href="https://www.instagram.com/al3x.kimani" target="_blank" title="Follow me on Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://x.com/alexkimani073" target="_blank" title="Follow me on X">
+                    <i class="fa-brands fa-x-twitter"></i>
+                </a>
+                <a href="https://github.com/Alexkimani-source" target="_blank" title="Follow me on GitHub">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+                <a href="https://discord.gg/zjjtxEBm" target="_blank" title="Join me on Discord">
+                    <i class="fa-brands fa-discord"></i>
+                </a>
+                <a href="https://wa.me/+254757278191" target="_blank" title="Chat with me on WhatsApp">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/alex-kang-ethe-3621a2320" target="_blank" title="lets connect on linkedIn">
+                    <i class="fa-brands fa-linkedin"></i>
+                </a>
+            </div>
+            <p class="footer-copyright">Copyright © 2025 Lex.Corp</p>
+        </footer>
+    </div>
+    <script>
+        const headerBar = document.querySelector('.header-bar');
+        const profileContainer = document.querySelector('.profile-container');
+        const profileHeader = document.querySelector('.profile-header');
+        const navMenu = document.querySelector('.nav-menu');
+        const scrollArrow = document.querySelector('.scroll-arrow');
+        const content = document.querySelector('.content');
+        let isScrolled = false;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50 && !isScrolled) {
+                profileHeader.appendChild(profileContainer);
+                headerBar.classList.add('scrolled');
+                profileContainer.classList.add('scrolled');
+                navMenu.classList.add('scrolled');
+                scrollArrow.classList.add('hidden');
+                content.classList.add('scrolled');
+                isScrolled = true;
+            }
+        });
+
+        profileContainer.addEventListener('click', () => {
+            if (isScrolled) {
+                document.querySelector('.container').appendChild(profileContainer);
+                headerBar.classList.remove('scrolled');
+                profileContainer.classList.remove('scrolled');
+                navMenu.classList.remove('scrolled');
+                scrollArrow.classList.remove('hidden');
+                content.classList.remove('scrolled');
+                isScrolled = false;
+            }
+        });
+
+        document.querySelectorAll('.project-box').forEach(box => {
+            box.addEventListener('click', () => {
+                const modal = document.getElementById('projectModal');
+                const modalContent = document.getElementById('modalContent');
+                const videoSrc = box.getAttribute('data-video');
+                const videoType = box.getAttribute('data-type');
+
+                if (box.classList.contains('has-image')) {
+                    const imageSrc = box.getAttribute('data-image');
+                    modalContent.innerHTML = `<button class="close-modal" id="closeModal">×</button><img src="${imageSrc}" alt="Project Image">`;
+                    modal.style.display = 'flex';
+                } else if (box.classList.contains('has-video')) {
+                    if (videoType === 'youtube') {
+                        modalContent.innerHTML = `
+                            <button class="close-modal" id="closeModal">×</button>
+                            <iframe src="${videoSrc}?autoplay=1" title="YouTube Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        `;
+                    } else if (videoType === 'local') {
+                        modalContent.innerHTML = `
+                            <button class="close-modal" id="closeModal">×</button>
+                            <video controls autoplay>
+                                <source src="${videoSrc}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        `;
+                    }
+                    modal.style.display = 'flex';
+                }
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'closeModal') {
+                const modal = document.getElementById('projectModal');
+                const modalContent = document.getElementById('modalContent');
+                modalContent.innerHTML = `<button class="close-modal" id="closeModal">×</button>`;
+                modal.style.display = 'none';
+            }
+        });
+
+        const modal = document.getElementById('projectModal');
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                const modalContent = document.getElementById('modalContent');
+                modalContent.innerHTML = `<button class="close-modal" id="closeModal">×</button>`;
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
