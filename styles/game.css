@@ -297,7 +297,7 @@ footer {
 
 @media (max-width: 480px) {
     :root {
-        --tile-size: 60px;
+        --tile-size: 65px;
     }
     .header-bar {
         padding: 1% 1%;
