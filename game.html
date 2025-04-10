@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Alex">
+    <title>Game.Alex</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <link rel="stylesheet" href="styles/game.css"> 
+</head>
+<body>
+<!-- Header Bar -->
+<div class="header-bar">
+    <div class="profile-header">
+        <div class="profile-container">
+            <img src="img/profile.jpeg" alt="Profile Picture" class="profile-pic">
+        </div>
+    </div>
+    <div class="nav-menu">
+        <ul>
+            <li><a href="index.html"><i class="fa-solid fa-house"></i></a></li>
+            <li><a href="about-me.html"><i class="fa-solid fa-info"></i></a></li>
+            <li><a href="contact-me.html"><i class="fa-solid fa-phone"></i></a></li>
+            <li><a href="Atlas.html"><i class="fa-solid fa-book-atlas"></i></a></li>
+            <li><a href="game.html"><i class="fa-solid fa-gamepad"></i></a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- Game Content -->
+<div class="content-wrapper">
+    <h2>Mercator Sliding Puzzle</h2>
+    <div id="instructions">
+        <h3>How to Play</h3>
+        <ul>
+            <li>A piece of the Mercator map is missing—your goal is to restore it!</li>
+            <li>Click "Shuffle" to scramble the tiles and start the game.</li>
+            <li>Click or tap a tile next to the empty space to slide it, or slide it with your cursor or finger toward the empty space.</li>
+            <li>Match the puzzle to the reference image above.</li>
+            <li>When all tiles are in place, the missing piece reappears, and you win!</li>
+            <li>Use "Quit" to give up (you lose) or "Restart" to try again.</li>
+        </ul>
+    </div>
+    <div class="game-wrapper">
+        <img id="referenceImage" src="img/GLG.kenya.png" alt="Reference Mercator">
+        <div id="message"></div>
+        <div class="game-container" id="puzzleBoard"></div>
+        <div class="controls">
+            <div id="moves">Moves: 0</div>
+            <button id="shuffleBtn">Shuffle</button>
+            <button id="quitBtn">Quit</button>
+            <button id="restartBtn">Restart</button>
+        </div>
+    </div>
+    <img id="puzzleImage" src="img/GLG.kenya.png" alt="Mercator Projection">
+    <p><em>inspired by my childhood memories</em></p>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="social-links">
+        <h3>Connect With Me</h3>
+        <div class="social-media-icons-wrapper">
+            <a href="https://www.instagram.com/al3x.kimani" target="_blank" title="Follow me on Instagram">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://x.com/alexkimani073" target="_blank" title="Follow me on X">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+            <a href="https://github.com/Alexkimani-source" target="_blank" title="Follow me on GitHub">
+                <i class="fa-brands fa-github"></i>
+            </a>
+            <a href="https://wa.me/+254757278191" target="_blank" title="Chat with me on WhatsApp">
+                <i class="fa-brands fa-whatsapp"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/alex-kang-ethe-3621a2320" target="_blank" title="Let's connect on LinkedIn">
+                <i class="fa-brands fa-linkedin"></i>
+            </a>
+        </div>
+    </div>
+    <p class="footer-copyright">Copyright © 2025 Lex.Corp</p>
+</footer>
+
+<script>
+    const board = document.getElementById('puzzleBoard');
+    const message = document.getElementById('message');
+    const movesDisplay = document.getElementById('moves');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const quitBtn = document.getElementById('quitBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const puzzleImage = document.getElementById('puzzleImage');
+    const grid = { rows: 4, cols: 4 };
+    let tiles = [];
+    let empty = null;
+    let missingTile = null;
+    let moveCount = 0;
+    let activeTile = null;
+    let gameStarted = false;
+    let gameEnded = false;
+    let startX = 0;
+    let startY = 0;
+    let canSlideX = false;
+    let canSlideY = false;
+    let isInteracting = false;
+    let hasMoved = false;
+
+    function getTileSize() {
+        return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tile-size'));
+    }
+
+    function setupBoard() {
+        board.innerHTML = '';
+        tiles = [];
+        moveCount = 0;
+        movesDisplay.textContent = `Moves: ${moveCount}`;
+        message.style.display = 'none';
+        message.textContent = '';
+        message.className = '';
+
+        const puzzlePieces = [
+            { col: 0, row: 0, num: 1 },
+            { col: 1, row: 0, num: 2 },
+            { col: 2, row: 0, num: 3 },
+            { col: 3, row: 0, num: 4 },
+            { col: 0, row: 1, num: 5 },
+            { col: 1, row: 1, num: 6 },
+            { col: 2, row: 1, num: 7 },
+            { col: 3, row: 1, num: 8 },
+            { col: 0, row: 2, num: 9 },
+            { col: 1, row: 2, num: 10 },
+            { col: 2, row: 2, num: 11 },
+            { col: 3, row: 2, num: 12 },
+            { col: 0, row: 3, num: 13 },
+            { col: 1, row: 3, num: 14 },
+            { col: 2, row: 3, num: 15 },
+            { col: 3, row: 3, num: 16 }
+        ];
+
+        const missingIndex = Math.floor(Math.random() * 16);
+        missingTile = puzzlePieces[missingIndex];
+        empty = { col: missingTile.col, row: missingTile.row };
+        puzzlePieces.splice(missingIndex, 1);
+
+        const imageUrl = puzzleImage.src;
+
+        puzzlePieces.forEach((piece) => {
+            const tile = document.createElement('div');
+            tile.className = 'tile';
+            const currentTileSize = getTileSize();
+            tile.style.transform = `translate(${piece.col * currentTileSize}px, ${piece.row * currentTileSize}px)`;
+            tile.style.backgroundImage = `url('${imageUrl}')`;
+            const bgX = (piece.col * 100) / (grid.cols - 1);
+            const bgY = (piece.row * 100) / (grid.rows - 1);
+            tile.style.backgroundPosition = `${bgX}% ${bgY}%`;
+            tile.dataset.col = piece.col;
+            tile.dataset.row = piece.row;
+            tile.dataset.correctCol = piece.col;
+            tile.dataset.correctRow = piece.row;
+            tile.dataset.num = piece.num;
+
+            tile.addEventListener('mousedown', handleStart);
+            tile.addEventListener('touchstart', handleStart, { passive: false });
+
+            board.appendChild(tile);
+            tiles.push(tile);
+        });
+
+        shuffleBtn.disabled = false;
+        quitBtn.disabled = true;
+        restartBtn.disabled = true;
+        gameStarted = false;
+        gameEnded = false;
+    }
+
+    function updateTilePositions() {
+        const currentTileSize = getTileSize();
+        tiles.forEach(tile => {
+            const col = parseInt(tile.dataset.col);
+            const row = parseInt(tile.dataset.row);
+            tile.style.transform = `translate(${col * currentTileSize}px, ${row * currentTileSize}px)`;
+        });
+    }
+
+    function countInversions() {
+        const flat = Array(16).fill(16);
+        tiles.forEach(tile => {
+            const col = parseInt(tile.dataset.col);
+            const row = parseInt(tile.dataset.row);
+            flat[row * 4 + col] = parseInt(tile.dataset.num);
+        });
+        let inversions = 0;
+        for (let i = 0; i < 15; i++) {
+            for (let j = i + 1; j < 16; j++) {
+                if (flat[i] !== 16 && flat[j] !== 16 && flat[i] > flat[j]) {
+                    inversions++;
+                }
+            }
+        }
+        return inversions;
+    }
+
+    function shuffleTiles() {
+        if (gameStarted || gameEnded) return;
+        gameStarted = true;
+        shuffleBtn.disabled = true;
+        quitBtn.disabled = false;
+        restartBtn.disabled = false;
+
+        const currentTileSize = getTileSize();
+        for (let i = 0; i < 100; i++) {
+            const neighbors = tiles.filter(tile => {
+                const col = parseInt(tile.dataset.col);
+                const row = parseInt(tile.dataset.row);
+                return isAdjacent(col, row);
+            });
+            if (neighbors.length) {
+                const tile = neighbors[Math.floor(Math.random() * neighbors.length)];
+                const col = parseInt(tile.dataset.col);
+                const row = parseInt(tile.dataset.row);
+                
+                tile.style.transform = `translate(${empty.col * currentTileSize}px, ${empty.row * currentTileSize}px)`;
+                tile.dataset.col = empty.col;
+                tile.dataset.row = empty.row;
+                
+                empty.col = col;
+                empty.row = row;
+            }
+        }
+
+        const inversions = countInversions();
+        const blankRow = empty.row;
+        const parity = inversions + blankRow;
+        if (parity % 2 !== 1) {
+            const tile1 = tiles.find(t => t.dataset.col === "0" && t.dataset.row === "0");
+            const tile2 = tiles.find(t => t.dataset.col === "1" && t.dataset.row === "0");
+            if (tile1 && tile2 && (empty.col !== 0 || empty.row !== 0) && (empty.col !== 1 || empty.row !== 0)) {
+                const tempCol = tile1.dataset.col;
+                const tempRow = tile1.dataset.row;
+                tile1.style.transform = `translate(${tile2.dataset.col * currentTileSize}px, ${tile2.dataset.row * currentTileSize}px)`;
+                tile1.dataset.col = tile2.dataset.col;
+                tile1.dataset.row = tile2.dataset.row;
+                tile2.style.transform = `translate(${tempCol * currentTileSize}px, ${tempRow * currentTileSize}px)`;
+                tile2.dataset.col = tempCol;
+                tile2.dataset.row = tempRow;
+            }
+        }
+    }
+
+    function quitGame() {
+        if (!gameStarted || gameEnded) return;
+        message.textContent = 'You Lose!';
+        message.className = 'lose';
+        message.style.display = 'block';
+        gameStarted = false;
+        gameEnded = true;
+        shuffleBtn.disabled = true;
+        quitBtn.disabled = true;
+        restartBtn.disabled = false;
+    }
+
+    function restartGame() {
+        setupBoard();
+    }
+
+    function slideTile(tile) {
+        const currentTileSize = getTileSize();
+        const col = parseInt(tile.dataset.col);
+        const row = parseInt(tile.dataset.row);
+
+        if (isAdjacent(col, row)) {
+            tile.style.transform = `translate(${empty.col * currentTileSize}px, ${empty.row * currentTileSize}px)`;
+            tile.dataset.col = empty.col;
+            tile.dataset.row = empty.row;
+
+            empty.col = col;
+            empty.row = row;
+
+            moveCount++;
+            movesDisplay.textContent = `Moves: ${moveCount}`;
+            checkVictory();
+        }
+    }
+
+    function handleStart(e) {
+        if (!gameStarted || gameEnded) return;
+        e.preventDefault();
+        activeTile = e.target;
+
+        const col = parseInt(activeTile.dataset.col);
+        const row = parseInt(activeTile.dataset.row);
+        canSlideX = Math.abs(col - empty.col) === 1 && row === empty.row;
+        canSlideY = Math.abs(row - empty.row) === 1 && col === empty.col;
+
+        const currentTileSize = getTileSize();
+        if (e.type === 'touchstart') {
+            const touch = e.touches[0];
+            startX = touch.clientX - (col * currentTileSize);
+            startY = touch.clientY - (row * currentTileSize);
+        } else {
+            startX = e.clientX - (col * currentTileSize);
+            startY = e.clientY - (row * currentTileSize);
+        }
+
+        if (canSlideX || canSlideY) {
+            activeTile.style.zIndex = 2;
+            isInteracting = true;
+            hasMoved = false;
+
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('mouseup', handleEnd);
+            document.addEventListener('touchmove', handleMove, { passive: false });
+            document.addEventListener('touchend', handleEnd);
+        }
+    }
+
+    function handleMove(e) {
+        if (!gameStarted || gameEnded || !activeTile || (!canSlideX && !canSlideY)) return;
+        e.preventDefault();
+        const currentTileSize = getTileSize();
+        const col = parseInt(activeTile.dataset.col);
+        const row = parseInt(activeTile.dataset.row);
+        let newX, newY;
+
+        if (e.type === 'touchmove') {
+            const touch = e.touches[0];
+            newX = touch.clientX - startX;
+            newY = touch.clientY - startY;
+        } else {
+            newX = e.clientX - startX;
+            newY = e.clientY - startY;
+        }
+
+        // Detect if the user has moved significantly to differentiate from a tap
+        const deltaX = newX - (col * currentTileSize);
+        const deltaY = newY - (row * currentTileSize);
+        const moveThreshold = currentTileSize * 0.1; // 10% of tile size to detect movement
+        if (Math.abs(deltaX) > moveThreshold || Math.abs(deltaY) > moveThreshold) {
+            hasMoved = true;
+        }
+
+        if (canSlideX) {
+            newY = row * currentTileSize;
+            const minX = Math.min(col * currentTileSize, empty.col * currentTileSize);
+            const maxX = Math.max(col * currentTileSize, empty.col * currentTileSize);
+            newX = Math.max(minX, Math.min(maxX, newX));
+        } else if (canSlideY) {
+            newX = col * currentTileSize;
+            const minY = Math.min(row * currentTileSize, empty.row * currentTileSize);
+            const maxY = Math.max(row * currentTileSize, empty.row * currentTileSize);
+            newY = Math.max(minY, Math.min(maxY, newY));
+        }
+
+        activeTile.style.transform = `translate(${newX}px, ${newY}px)`;
+    }
+
+    function handleEnd(e) {
+        if (!gameStarted || gameEnded || !activeTile) return;
+        const currentTileSize = getTileSize();
+        const col = parseInt(activeTile.dataset.col);
+        const row = parseInt(activeTile.dataset.row);
+
+        if (isInteracting && (canSlideX || canSlideY) && hasMoved) {
+            let newX, newY;
+            if (e.type === 'touchend') {
+                const touch = e.changedTouches[0];
+                newX = touch.clientX - startX;
+                newY = touch.clientY - startY;
+            } else {
+                newX = e.clientX - startX;
+                newY = e.clientY - startY;
+            }
+
+            const deltaX = newX - (col * currentTileSize);
+            const deltaY = newY - (row * currentTileSize);
+            const threshold = currentTileSize * 0.5; // 50% of tile size to snap
+            const movedEnoughX = canSlideX && Math.abs(deltaX) > threshold;
+            const movedEnoughY = canSlideY && Math.abs(deltaY) > threshold;
+
+            if (movedEnoughX || movedEnoughY) {
+                activeTile.style.transform = `translate(${empty.col * currentTileSize}px, ${empty.row * currentTileSize}px)`;
+                activeTile.dataset.col = empty.col;
+                activeTile.dataset.row = empty.row;
+
+                empty.col = col;
+                empty.row = row;
+
+                moveCount++;
+                movesDisplay.textContent = `Moves: ${moveCount}`;
+                checkVictory();
+            } else {
+                activeTile.style.transform = `translate(${col * currentTileSize}px, ${row * currentTileSize}px)`;
+            }
+        } else {
+            slideTile(activeTile);
+        }
+
+        activeTile.style.zIndex = 1;
+        activeTile = null;
+        canSlideX = false;
+        canSlideY = false;
+        isInteracting = false;
+        hasMoved = false;
+
+        document.removeEventListener('mousemove', handleMove);
+        document.removeEventListener('mouseup', handleEnd);
+        document.removeEventListener('touchmove', handleMove);
+        document.removeEventListener('touchend', handleEnd);
+    }
+
+    function isAdjacent(col, row) {
+        return (Math.abs(col - empty.col) === 1 && row === empty.row) ||
+               (Math.abs(row - empty.row) === 1 && col === empty.col);
+    }
+
+    function checkVictory() {
+        const currentTileSize = getTileSize();
+        const solved = tiles.every(tile => {
+            const col = parseInt(tile.dataset.col);
+            const row = parseInt(tile.dataset.row);
+            const correctCol = parseInt(tile.dataset.correctCol);
+            const correctRow = parseInt(tile.dataset.correctRow);
+            return col === correctCol && row === correctRow;
+        });
+        
+        if (solved) {
+            const tile = document.createElement('div');
+            tile.className = 'tile';
+            tile.style.transform = `translate(${missingTile.col * currentTileSize}px, ${missingTile.row * currentTileSize}px)`;
+            tile.style.backgroundImage = `url('${puzzleImage.src}')`;
+            const bgX = (missingTile.col * 100) / (grid.cols - 1);
+            const bgY = (missingTile.row * 100) / (grid.rows - 1);
+            tile.style.backgroundPosition = `${bgX}% ${bgY}%`;
+            tile.dataset.col = missingTile.col;
+            tile.dataset.row = missingTile.row;
+            tile.dataset.correctCol = missingTile.col;
+            tile.dataset.correctRow = missingTile.row;
+            tile.dataset.num = missingTile.num;
+            board.appendChild(tile);
+            tiles.push(tile);
+
+            message.textContent = 'You Have Won!';
+            message.className = 'win';
+            message.style.display = 'block';
+            gameStarted = false;
+            gameEnded = true;
+            shuffleBtn.disabled = true;
+            quitBtn.disabled = true;
+            restartBtn.disabled = false;
+        }
+    }
+
+    setupBoard();
+    shuffleBtn.addEventListener('click', shuffleTiles);
+    quitBtn.addEventListener('click', quitGame);
+    restartBtn.addEventListener('click', restartGame);
+
+    window.addEventListener('resize', updateTilePositions);
+</script>
+</body>
+</html>
