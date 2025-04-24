@@ -657,7 +657,7 @@ footer {
     .profile-container.scrolled .profile-pic { width: 10vw; height: 10vw; }
     .scroll-arrow { bottom: 1rem; }
     .content { top: 6rem; }
-    .project-box { width: clamp(6rem, 25vw, 8rem); height: clamp(5rem, 15vw, 8rem); }
+    .project-box { width: clamp(6rem, 25vw, 8rem); height: clamp(6rem, 15vw, 9rem); }
     .modal { padding-top: 3rem; }
     .academic-container { padding-left: 1.5rem; }
     .academic-container::before { left: 0.5rem; }
