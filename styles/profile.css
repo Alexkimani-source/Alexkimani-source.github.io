@@ -1,16 +1,84 @@
-body {
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
     background-color: black;
     color: white;
     font-family: Arial, sans-serif;
-    height: auto;
+    overflow: hidden; /* Prevent scrolling during loading */
 }
 
 .container {
     position: relative;
     width: 100%;
     min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px; /* 3D depth for loading */
+}
+
+.profile-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    text-align: center;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+}
+
+.profile-container.scrolled {
+    position: static;
+    transform: none;
+    z-index: 31;
+    width: auto;
+    height: auto;
+}
+
+.image-box,
+.content-box {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.image-box {
+    opacity: 0;
+    animation: imageAnimation 4s ease-in-out forwards;
+}
+
+.image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.content-box {
+    background-color: #393e46;
+    border-radius: 50%;
+    opacity: 0;
+    transform: translate3d(0, -150px, -220px) rotate3d(1, 0, 0, 90deg);
+    animation: contentAnimation 4s ease-in-out forwards;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-box .profile-title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    color: white;
+    text-align: center;
+    padding: 1rem;
 }
 
 .header-bar {
@@ -24,29 +92,15 @@ body {
     padding: 2% 2%;
     background-color: rgba(0, 0, 0, 0.9);
     z-index: 30;
-    transition: transform 0.5s ease;
-    transform: translateY(-100%);
+    opacity: 0;
+    transform: translate3d(0, -100%, -200px) rotate3d(1, 0, 0, 90deg);
+    animation: navAnimation 4s ease-in-out forwards;
 }
 
 .header-bar.scrolled {
     transform: translateY(0);
-}
-
-.profile-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: all 0.5s ease;
-    z-index: 10;
-    text-align: center;
-    cursor: pointer;
-}
-
-.profile-container.scrolled {
-    position: static;
-    transform: none;
-    z-index: 31;
+    opacity: 1;
+    animation: none;
 }
 
 .profile-pic {
@@ -56,7 +110,6 @@ body {
     max-height: 300px;
     border-radius: 50%;
     object-fit: cover;
-    transition: all 0.5s ease;
 }
 
 .profile-container.scrolled .profile-pic {
@@ -66,26 +119,16 @@ body {
     max-height: 70px;
 }
 
-.profile-title {
-    margin-top: 1rem;
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    transition: all 0.5s ease;
-}
-
-.profile-container.scrolled .profile-title {
-    font-size: clamp(0.8rem, 2vw, 1rem);
-    margin-top: 0;
-    margin-left: 1rem;
-}
-
 .nav-menu {
     transition: all 0.5s ease;
     opacity: 0;
     margin-top: 1rem;
+    animation: navMenuAnimation 4s ease-in-out forwards;
 }
 
 .nav-menu.scrolled {
     opacity: 1;
+    animation: none;
 }
 
 .nav-menu ul {
@@ -125,11 +168,7 @@ body {
     animation: bounce 2s infinite;
     transition: opacity 0.5s ease;
     z-index: 20;
-}
-
-.scroll-arrow.hidden {
-    opacity: 0;
-    pointer-events: none;
+    opacity: 0; /* Hidden during loading */
 }
 
 @keyframes bounce {
@@ -146,7 +185,6 @@ body {
     visibility: hidden;
     opacity: 0;
     transform: translateY(100vh);
-    transition: visibility 0s linear 0.5s, opacity 0.5s ease, transform 0.5s ease;
     background-color: black;
 }
 
@@ -155,6 +193,86 @@ body {
     opacity: 1;
     transform: translateY(0);
     transition: visibility 0s linear 0s, opacity 0.5s ease, transform 0.5s ease;
+}
+
+@keyframes imageAnimation {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, -150px, -220px) rotate3d(1, 0, 0, -90deg);
+    }
+    10% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate3d(1, 0, 0, 0deg);
+    }
+    50% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate3d(1, 0, 0, 0deg);
+    }
+    60% {
+        opacity: 0;
+        transform: translate3d(0, 150px, 220px) rotate3d(1, 0, 0, 90deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translate3d(0, 150px, 220px) rotate3d(1, 0, 0, 90deg);
+    }
+}
+
+@keyframes contentAnimation {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, -150px, -220px) rotate3d(1, 0, 0, 90deg);
+    }
+    50% {
+        opacity: 0;
+        transform: translate3d(0, -150px, -220px) rotate3d(1, 0, 0, 90deg);
+    }
+    60% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate3d(1, 0, 0, 0deg);
+    }
+    75% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate3d(1, 0, 0, 0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) rotate3d(1, 0, 0, 0deg);
+    }
+}
+
+@keyframes navAnimation {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, -100%, -200px) rotate3d(1, 0, 0, 90deg);
+    }
+    75% {
+        opacity: 0;
+        transform: translate3d(0, -100%, -200px) rotate3d(1, 0, 0, 90deg);
+    }
+    85% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate3d(1, 0, 0, 0deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate3d(1, 0, 0, 0deg);
+    }
+}
+
+@keyframes navMenuAnimation {
+    0% {
+        opacity: 0;
+    }
+    75% {
+        opacity: 0;
+    }
+    85% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 .projects-section h2 {
@@ -526,6 +644,8 @@ footer {
     .academic-box .school-logo { width: clamp(1.5rem, 6vw, 2.5rem); height: clamp(1.5rem, 6vw, 2.5rem); }
     .licenses-container { gap: 1rem; }
     .license-box { padding: 1rem; }
+    .profile-container { width: 250px; height: 250px; }
+    .content-box .profile-title { font-size: clamp(1.2rem, 3vw, 1.5rem); }
 }
 
 @media (max-width: 480px) {
@@ -542,4 +662,5 @@ footer {
     .academic-container { padding-left: 1.5rem; }
     .academic-container::before { left: 0.5rem; }
     .academic-box::before { left: -1rem; }
+    .profile-container { width: 200px; height: 200px; }
 }
