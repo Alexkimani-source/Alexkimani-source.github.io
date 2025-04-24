@@ -11,9 +11,13 @@
 </head>
 <body>
     <div class="container">
-        <div class="profile-container">
-            <img src="img/profile.jpeg" alt="Profile Picture" class="profile-pic">
-            <div class="profile-title">hello ,i'm Alex</div>
+        <div class="profile-container" role="alert" aria-label="Loading animation">
+            <div class="image-box">
+                <img src="img/profile.jpeg" alt="Profile Picture">
+            </div>
+            <div class="content-box">
+                <div class="profile-title">hello, i'm Alex</div>
+            </div>
         </div>
         <div class="scroll-arrow">↓</div>
     </div>
@@ -57,15 +61,6 @@
                     <span class="project-title">Ball animation</span>
                     <div class="project-date">In Progress</div>
                 </div>
-                <!--<div class="project-box no-image">
-                    <span class="project-title">Project 5</span>
-                    <div class="project-date">In Progress</div>
-                </div>
-                <div class="project-box has-video" data-type="local" data-video="videos/sample-video.mp4" data-thumbnail="img/sample-thumbnail.jpg">
-                    <img src="img/sample-thumbnail.jpg" alt="Project 6 Video Thumbnail">
-                    <span>Project 6 (Local Video)</span>
-                    <div class="project-date">April 1, 2025</div>
-                </div>-->
             </div>
         </div>
         <div class="modal" id="projectModal">
@@ -163,32 +158,33 @@
         const navMenu = document.querySelector('.nav-menu');
         const scrollArrow = document.querySelector('.scroll-arrow');
         const content = document.querySelector('.content');
-        let isScrolled = false;
 
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50 && !isScrolled) {
-                profileHeader.appendChild(profileContainer);
-                headerBar.classList.add('scrolled');
-                profileContainer.classList.add('scrolled');
-                navMenu.classList.add('scrolled');
-                scrollArrow.classList.add('hidden');
-                content.classList.add('scrolled');
-                isScrolled = true;
-            }
-        });
+        // Hide content and scroll arrow during loading
+        content.style.display = 'none';
+        scrollArrow.style.display = 'none';
 
-        profileContainer.addEventListener('click', () => {
-            if (isScrolled) {
-                document.querySelector('.container').appendChild(profileContainer);
-                headerBar.classList.remove('scrolled');
-                profileContainer.classList.remove('scrolled');
-                navMenu.classList.remove('scrolled');
-                scrollArrow.classList.remove('hidden');
-                content.classList.remove('scrolled');
-                isScrolled = false;
-            }
-        });
+        // After loading (4s), transition to scrolled state
+        setTimeout(() => {
+            // Move profile-container to profile-header
+            profileHeader.appendChild(profileContainer);
+            // Apply scrolled classes
+            headerBar.classList.add('scrolled');
+            profileContainer.classList.add('scrolled');
+            navMenu.classList.add('scrolled');
+            content.classList.add('scrolled');
+            // Show content and scroll arrow
+            content.style.display = 'block';
+            scrollArrow.style.display = 'block';
+            // Allow scrolling
+            document.body.style.overflow = 'auto';
 
+            // Replace image-box and content-box with only profile picture
+            profileContainer.innerHTML = `
+                <img src="img/profile.jpeg" alt="Profile Picture" class="profile-pic">
+            `;
+        }, 4000);
+
+        // Modal functionality
         document.querySelectorAll('.project-box').forEach(box => {
             box.addEventListener('click', () => {
                 const modal = document.getElementById('projectModal');
