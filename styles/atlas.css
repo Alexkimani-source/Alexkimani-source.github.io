@@ -1,6 +1,10 @@
- body {
+ * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             background-color: black;
             color: white;
             font-family: Arial, sans-serif;
@@ -55,30 +59,22 @@
             color: white;
             text-decoration: none;
             font-size: clamp(1rem, 2vw, 1.125rem);
+            transition: color 0.3s ease;
         }
 
         .nav-menu a:hover {
             color: #ccc;
         }
 
-        .profile-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .nav-menu a.active {
+            color: #00ff88;
+            font-weight: bold;
         }
 
-        footer {
-            padding: 2% 0;
-            text-align: center;
-            margin-top: 2rem;
-            width: 100%;
-            background-color: #1a1a1a;
-        }
-
-        .footer-copyright {
-            margin: 0;
-            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-            color: #aaa;
+        .nav-menu a:focus {
+            outline: 2px solid #00ff88;
+            outline-offset: 2px;
+            border-radius: 4px;
         }
 
         .atlas {
@@ -86,35 +82,35 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            margin-top: 10rem;
+            margin-top: clamp(6rem, 12vw, 8rem);
         }
 
         .page-container {
             display: flex;
             justify-content: center;
+            width: 100%;
         }
 
         .page-container > .content-wrapper {
-            width: 1000px;
-            max-width: 100%;
-            padding: 0 20px;
+            width: min(1000px, 100%);
+            padding: 0 clamp(10px, 2vw, 20px);
         }
 
         .page {
-            margin: 20px auto;
-            padding: clamp(15px, 3vw, 30px);
+            margin: clamp(10px, 2vw, 20px) auto;
+            padding: clamp(10px, 2vw, 20px);
             background-color: #fffef0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border: 1px solid #c2b280;
             font-family: Arial, sans-serif;
-            line-height: 1.5;
+            line-height: 1.6;
             color: #333;
             overflow: hidden;
         }
 
         .skewed-header {
             position: relative;
-            height: 400px;
+            height: clamp(200px, 40vw, 350px);
             width: 100%;
             background-color: #cea123;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -132,7 +128,7 @@
             width: 100%;
             background: no-repeat center center;
             background-size: cover;
-            transform: skewY(-6deg);
+            transform: skewY(-4deg);
             transform-origin: top left;
             filter: brightness(100%);
         }
@@ -144,12 +140,12 @@
             width: 100%;
             height: 100%;
             align-items: flex-start;
-            padding-top: 20px;
+            padding-top: clamp(10px, 2vw, 20px);
         }
 
         .skewed-header > .skewed-header-wrapper > .skewed-header-content {
             width: 100%;
-            max-width: 700px;
+            max-width: min(700px, 90%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -160,23 +156,23 @@
             color: #11122b;
             border-bottom-left-radius: 2px;
             border-bottom-right-radius: 2px;
-            width: 175px;
-            padding: 10px;
+            width: clamp(120px, 20vw, 160px);
+            padding: clamp(6px, 1vw, 8px);
             text-align: center;
         }
 
         .skewed-header > .skewed-header-wrapper > .skewed-header-content > .heading-wrapper h1 {
             margin: 0;
-            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
             text-transform: uppercase;
         }
 
         .page h2 {
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            margin: 0 0 15px 0;
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            margin: 0 0 clamp(10px, 1.5vw, 15px);
             color: #2f4f4f;
             border-bottom: 2px solid #d3d3d3;
-            padding-bottom: 8px;
+            padding-bottom: clamp(6px, 1vw, 8px);
         }
 
         .page-body {
@@ -189,7 +185,7 @@
 
         .page-content p {
             font-size: clamp(0.875rem, 1.5vw, 1rem);
-            margin: 0 0 10px 0;
+            margin: 0 0 clamp(8px, 1vw, 10px);
         }
 
         .image-slider {
@@ -198,11 +194,12 @@
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
-            margin: 1rem 0;
-            padding: 0.5rem 0;
+            margin: clamp(0.5rem, 1vw, 1rem) 0;
+            padding: clamp(0.25rem, 0.5vw, 0.5rem) 0;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             -ms-overflow-style: none;
+            max-width: 100%;
         }
 
         .image-slider::-webkit-scrollbar {
@@ -210,8 +207,8 @@
         }
 
         .slider-card {
-            flex: 0 0 350px;
-            margin-right: 1rem;
+            flex: 0 0 min(300px, 90vw);
+            margin-right: clamp(0.5rem, 1vw, 1rem);
             scroll-snap-align: start;
             background: #fffef0;
             border: 2px solid #666;
@@ -222,14 +219,15 @@
 
         .slider-card img {
             width: 100%;
-            height: 200px;
+            aspect-ratio: 16 / 9;
             object-fit: cover;
             display: block;
             cursor: pointer;
             transition: transform 0.3s ease;
         }
 
-        .slider-card img:hover, .slider-card img:focus {
+        .slider-card img:hover,
+        .slider-card img:focus {
             transform: scale(1.05);
         }
 
@@ -240,15 +238,21 @@
             width: 100vw;
             height: 100vh;
             object-fit: contain;
-            z-index: 999;
+            z-index: 1000;
             background: rgba(0, 0, 0, 0.9);
             margin: 0;
+            padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+            transition: all 0.3s ease;
+        }
+
+        body.fullscreen-active {
+            overflow: hidden;
         }
 
         .facts {
-            font-size: clamp(0.75rem, 1.5vw, 0.95em);
+            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
             color: #555;
-            margin-top: 10px;
+            margin-top: clamp(8px, 1vw, 10px);
         }
 
         .facts strong {
@@ -256,14 +260,38 @@
         }
 
         .facts ul {
-            margin: 0.5rem 0;
-            padding-left: 1.5rem;
+            margin: clamp(0.25rem, 0.5vw, 0.5rem) 0;
+            padding-left: clamp(1rem, 2vw, 1.5rem);
         }
 
         .end-page {
             text-align: center;
             background-color: #fffef0;
             color: #333;
+            padding: clamp(10px, 2vw, 20px);
+        }
+
+        footer {
+            padding: clamp(1rem, 2vw, 2rem) 0;
+            text-align: center;
+            margin-top: clamp(1rem, 2vw, 2rem);
+            width: 100%;
+            background-color: #1a1a1a;
+        }
+
+        .footer-copyright {
+            margin: 0;
+            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+            color: #aaa;
+        }
+
+        @media (min-width: 1200px) {
+            .page-container > .content-wrapper {
+                width: 1100px;
+            }
+            .slider-card {
+                flex: 0 0 350px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -278,27 +306,25 @@
                 height: 8vw;
             }
             .atlas {
-                margin-top: 8rem;
+                margin-top: clamp(5rem, 10vw, 6rem);
             }
             .page-container > .content-wrapper {
-                width: 100%;
-                padding: 0 15px;
+                padding: 0 clamp(8px, 1.5vw, 12px);
             }
             .slider-card {
-                flex: 0 0 300px;
+                flex: 0 0 min(280px, 85vw);
             }
-            .slider-card img {
-                height: 180px;
+            .skewed-header {
+                height: clamp(180px, 35vw, 250px);
+            }
+            .skewed-header > .header-bg {
+                transform: skewY(-3deg);
             }
         }
 
         @media (max-width: 480px) {
             .header-bar {
                 padding: 1% 1%;
-            }
-            .profile-pic {
-                width: 10vw;
-                height: 10vw;
             }
             .nav-menu {
                 margin-top: 0.5rem;
@@ -313,53 +339,20 @@
             .nav-menu a {
                 font-size: clamp(0.875rem, 2vw, 1rem);
             }
-            .atlas {
-                margin-top: 6rem;
+            .profile-pic {
+                width: 10vw;
+                height: 10vw;
             }
             .page-container > .content-wrapper {
-                width: 100%;
-                padding: 0 10px;
+                padding: 0 clamp(4px, 1vw, 8px);
             }
             .slider-card {
-                flex: 0 0 250px;
+                flex: 0 0 min(240px, 90vw);
             }
-            .slider-card img {
-                height: 150px;
+            .skewed-header {
+                height: clamp(150px, 30vw, 200px);
             }
-            .page-content p,
-            .facts {
-                font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-            }
-            .skewed-header > .skewed-header-wrapper > .skewed-header-content > .heading-wrapper {
-                width: 150px;
-                padding: 8px;
-            }
-            .page.end-page {
-                background-color: #000000;
-                padding: 20px;
-                text-align: center;
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                color: #ffffff;
-            }
-            .page.end-page p:first-child {
-                font-style: italic;
-                font-size: 1.5em;
-                margin-bottom: 20px;
-            }
-            .page.end-page p:last-child {
-                margin: 0;
-            }
-            .page.end-page a {
-                background-color: #ffffff;
-                color: #000000;
-                padding: 8px 15px;
-                text-decoration: none;
-                border-radius: 5px;
-            }
-            .page.end-page a:hover {
-                background-color: #d3d3d3;
+            .skewed-header > .header-bg {
+                transform: skewY(-2deg);
             }
         }
