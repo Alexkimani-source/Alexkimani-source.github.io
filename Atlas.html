@@ -26,7 +26,6 @@
             </ul>
         </div>
     </div>
-
     <div class="atlas" id="top">
         <div class="page-container">
             <div class="content-wrapper">
@@ -41,6 +40,65 @@
                         </div>
                     </div>
                 </div>
+
+    <div class="page">
+    <h2>RUSLE (Revised Universal Soil Loss Equation)</h2>
+    <div class="page-body">
+        <div class="page-content">
+            <p>The Revised Universal Soil Loss Equation (RUSLE) is a widely used model designed to estimate long-term average annual soil loss caused by sheet and rill erosion from rainfall and associated overland flow. It’s especially valuable in land use planning, conservation practices, and watershed management.</p>
+            
+            <p style="text-align: center; font-weight: bold; font-size: 1.2em;">RUSLE Formula:</p>
+            <p style="text-align: center; font-weight: bold; font-size: 1.3em;">
+                <code><em>A = R × K × LS × C × P</em></code></p>
+
+            <ul>
+                <li>
+  <h3><strong>R FACTOR / Rainfall Erosivity Factor</strong></h3>
+  <p>
+    The R factor (Rainfall Erosivity Factor) quantifies the impact of raindrop energy and the potential for rainfall to cause soil erosion. 
+    It is a crucial component in the RUSLE model as it captures the erosive force of precipitation over time.
+  </p>
+  <p>
+    <strong>Data typically used:</strong> High-resolution daily or monthly precipitation data from weather stations or satellite products.
+  </p>
+  <p>
+    <strong>Data used in this study:</strong> I used daily rainfall raster data for the year 2024, specifically covering the Machakos region. 
+    The data was obtained from the <a href="https://climateserv.servirglobal.net/" target="_blank">ClimateSERV platform</a>, 
+    which provides access to satellite-derived climate datasets suitable for environmental modeling and analysis.
+  </p>
+  <p>
+    <strong>Methodology:</strong> The daily rainfall rasters were processed using Python, where I aggregated the precipitation values over the full year 
+    to calculate cumulative erosivity. Libraries such as <code>rasterio</code>, <code>numpy</code>, and <code>matplotlib</code> were used to handle data input, computation, and visualization. 
+    The final output was a single raster layer representing the spatial distribution of the R factor for 2024.
+  </p>
+    <p>
+    <strong>Formula applied:</strong> In this study, due to the unavailability of 30-minute interval rainfall data (I<sub>30</sub>), I applied an alternative empirical formula:
+    <br><code>R = ∑P<sub>i</sub>²</code>
+    <br>Where <em>P<sub>i</sub></em> is the daily rainfall amount in mm. This formula has been widely used in African-based studies as a substitute to calculate rainfall erosivity from daily data.
+  </p>
+  <p>
+    <strong>Reason for choosing this formula:</strong> The original RUSLE requires high-frequency rainfall data to compute rainfall intensity and kinetic energy, which was unavailable for this study area. 
+    Therefore, I adopted this empirical approach, which uses daily data to estimate the erosive potential more feasibly and spatially.
+  </p>
+
+  <p>
+    <strong>Alternative method (Kasam scenario):</strong> Another alternative commonly used is the Kasam approach, where monthly rainfall is interpolated using Inverse Distance Weighting (IDW) in QGIS 
+    and then multiplied by an empirical constant to estimate erosivity. However, I focused on the daily raster approach in Python to maintain spatial resolution and accuracy.
+  </p>
+
+  <p>
+    <strong>Comparison with KMD map:</strong> To validate the generated 2024 R-factor map, I compared it with the annual erosivity map from the Kenya Meteorological Department (KMD). 
+    Although KMD uses station-based data and potentially different methodology, the spatial patterns showed notable similarities in erosive zones, especially in areas with high annual rainfall.
+  </p>
+
+  <div style="margin-top: 2em; color: red; font-weight: bold; font-size: 1.1em; text-align: center;">
+    ⚠️ documentation still in progress and will be added soon.
+  </div>
+</ul>
+</li>
+</div>
+</div>
+</div>
     <div class="page">
     <h2>Comparative Topographic Analysis of Mount Kenya Ascent Routes : why there is no established climbing route via ragati near Karatina University</h2>
     <div class="page-body">
