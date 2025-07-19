@@ -96,6 +96,44 @@
   </div>
 </ul>
 </li>
+<li>
+  <h3><strong>K FACTOR / Soil Erodibility Factor</strong></h3>
+  <p>
+    The K factor quantifies the susceptibility of soil particles to detachment and transport by rainfall and runoff. 
+    It is influenced by soil texture (sand, silt, clay), organic matter, structure, and permeability.
+  </p>
+  <p>
+    <strong>Data source used:</strong> I used raster layers from <a href="https://soilgrids.org" target="_blank">SoilGrids</a> 
+    representing the spatial distribution of sand, silt, clay, and organic carbon content. These were downloaded as TIFF raster files suitable for GIS and Python-based processing.
+  </p>
+  <p>
+    <strong>Formula applied:</strong> I implemented the Williams et al. (2000) equation for the K-factor. This formula computes the erodibility value pixel by pixel using the following components:
+  </p>
+  <p style="margin-left: 20px; font-style: italic;">
+    K = f<sub>sand</sub> × f<sub>clay</sub> × f<sub>orgC</sub> × f<sub>silt</sub> × 0.1317
+  </p>
+  <p>
+    Each function accounts for specific soil characteristics:
+    <ul>
+      <li><strong>f<sub>sand</sub></strong>: effect of sand fraction</li>
+      <li><strong>f<sub>clay</sub></strong>: effect of clay content</li>
+      <li><strong>f<sub>orgC</sub></strong>: effect of organic carbon</li>
+      <li><strong>f<sub>silt</sub></strong>: effect of silt and texture balance</li>
+    </ul>
+  </p>
+  <p>
+    <strong>Reason for using this approach:</strong> I chose the Williams equation over the Kassam method because the raster-based formula allows for a more continuous and high-resolution estimation across the entire region. 
+    The Williams approach takes advantage of pixel-level data from SoilGrids, enabling direct application using Python.
+  </p>
+  <p>
+    The alternative <strong>Kassam approach</strong> is commonly used when data is only available at specific stations. 
+    In that method, K values are calculated or observed at a few field sites and then interpolated (e.g., using IDW or Kriging in QGIS) to estimate values for the rest of the study area. 
+    While suitable in field-sampled scenarios, this method was less ideal here due to the availability of full raster coverage, making the pixel-by-pixel Williams formula more accurate and computationally consistent.
+  </p>
+  <p>
+    <strong>Software used:</strong> I used Python for its flexibility and automation in processing multiple raster layers. While I attempted a QGIS-based approach, I encountered challenges managing the formula within raster calculator expressions. Therefore, Python proved more efficient.
+  </p>
+</li>
 </div>
 </div>
 </div>
