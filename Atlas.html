@@ -42,101 +42,92 @@
                 </div>
 
     <div class="page">
-    <h2>RUSLE (Revised Universal Soil Loss Equation)</h2>
-    <div class="page-body">
-        <div class="page-content">
-            <p>The Revised Universal Soil Loss Equation (RUSLE) is a widely used model designed to estimate long-term average annual soil loss caused by sheet and rill erosion from rainfall and associated overland flow. It’s especially valuable in land use planning, conservation practices, and watershed management.</p>
-            
-            <p style="text-align: center; font-weight: bold; font-size: 1.2em;">RUSLE Formula:</p>
-            <p style="text-align: center; font-weight: bold; font-size: 1.3em;">
-                <code><em>A = R × K × LS × C × P</em></code></p>
+  <h2>RUSLE (Revised Universal Soil Loss Equation)</h2>
+  <div class="page-body">
+    <div class="page-content">
 
-            <ul>
-                <li>
-  <h3><strong>R FACTOR / Rainfall Erosivity Factor</strong></h3>
-  <p>
-    The R factor (Rainfall Erosivity Factor) quantifies the impact of raindrop energy and the potential for rainfall to cause soil erosion. 
-    It is a crucial component in the RUSLE model as it captures the erosive force of precipitation over time.
-  </p>
-  <p>
-    <strong>Data typically used:</strong> High-resolution daily or monthly precipitation data from weather stations or satellite products.
-  </p>
-  <p>
-    <strong>Data used in this study:</strong> I used daily rainfall raster data for the year 2024, specifically covering the Machakos region. 
-    The data was obtained from the <a href="https://climateserv.servirglobal.net/" target="_blank">ClimateSERV platform</a>, 
-    which provides access to satellite-derived climate datasets suitable for environmental modeling and analysis.
-  </p>
-  <p>
-    <strong>Methodology:</strong> The daily rainfall rasters were processed using Python, where I aggregated the precipitation values over the full year 
-    to calculate cumulative erosivity. Libraries such as <code>rasterio</code>, <code>numpy</code>, and <code>matplotlib</code> were used to handle data input, computation, and visualization. 
-    The final output was a single raster layer representing the spatial distribution of the R factor for 2024.
-  </p>
-    <p>
-    <strong>Formula applied:</strong> In this study, due to the unavailability of 30-minute interval rainfall data (I<sub>30</sub>), I applied an alternative empirical formula:
-    <br><code>R = ∑P<sub>i</sub>²</code>
-    <br>Where <em>P<sub>i</sub></em> is the daily rainfall amount in mm. This formula has been widely used in African-based studies as a substitute to calculate rainfall erosivity from daily data.
-  </p>
-  <p>
-    <strong>Reason for choosing this formula:</strong> The original RUSLE requires high-frequency rainfall data to compute rainfall intensity and kinetic energy, which was unavailable for this study area. 
-    Therefore, I adopted this empirical approach, which uses daily data to estimate the erosive potential more feasibly and spatially.
-  </p>
+      <p>
+        The Revised Universal Soil Loss Equation (RUSLE) is a widely used model designed to estimate long-term average annual soil loss caused by sheet and rill erosion from rainfall and associated overland flow. 
+        It’s especially valuable in land use planning, conservation practices, and watershed management.
+      </p>
 
-  <p>
-    <strong>Alternative method (Kasam scenario):</strong> Another alternative commonly used is the Kasam approach, where monthly rainfall is interpolated using Inverse Distance Weighting (IDW) in QGIS 
-    and then multiplied by an empirical constant to estimate erosivity. However, I focused on the daily raster approach in Python to maintain spatial resolution and accuracy.
-  </p>
+      <p style="text-align: center; font-weight: bold; font-size: 1.2em;">RUSLE Formula:</p>
+      <p style="text-align: center; font-weight: bold; font-size: 1.3em;">
+        <code><em>A = R × K × LS × C × P</em></code>
+      </p>
 
-  <p>
-    <strong>Comparison with KMD map:</strong> To validate the generated 2024 R-factor map, I compared it with the annual erosivity map from the Kenya Meteorological Department (KMD). 
-    Although KMD uses station-based data and potentially different methodology, the spatial patterns showed notable similarities in erosive zones, especially in areas with high annual rainfall.
-  </p>
+      <ul>
+        <li>
+          <h3><strong>R FACTOR / Rainfall Erosivity Factor</strong></h3>
+          <p>
+            The R factor quantifies the erosive force of rainfall based on the energy of raindrops and the rate of precipitation. It’s a key input in understanding how rainfall contributes to soil degradation.
+          </p>
+          <p>
+            <strong>Data used:</strong> I used daily rainfall raster data for the year 2024 over the Machakos region, obtained from 
+            <a href="https://climateserv.servirglobal.net/" target="_blank">ClimateSERV</a>. This platform provides satellite-based climate datasets suitable for spatial environmental analysis.
+          </p>
+          <p>
+            <strong>Method:</strong> Using Python, I aggregated daily rasters into a cumulative rainfall erosivity layer. Libraries like <code>rasterio</code> and <code>numpy</code> enabled efficient raster processing. 
+          </p>
+          <p>
+            <strong>Formula used:</strong> Since I lacked 30-minute interval rainfall data (I<sub>30</sub>), I applied the empirical formula:
+            <br><code>R = ∑P<sub>i</sub>²</code>
+            <br>Where <em>P<sub>i</sub></em> represents daily rainfall in millimeters. This empirical alternative is widely used in African contexts when high-resolution temporal data is unavailable.
+          </p>
+          <p>
+            <strong>Why this formula:</strong> The original RUSLE model requires high-frequency data, which was not available. This empirical method provided a reliable and spatially consistent estimate using available daily data.
+          </p>
+          <p>
+            <strong>Alternative method – Kassam scenario:</strong> Some researchers apply monthly rainfall and interpolate values using IDW in QGIS, then apply empirical constants. Although viable, I focused on the daily raster approach for higher resolution and automation.
+          </p>
+          <p>
+            <strong>Comparison with KMD map:</strong> I validated the R-factor results by comparing with the Kenya Meteorological Department (KMD) erosivity maps. Despite KMD using station-based datasets, there were notable spatial similarities.
+          </p>
+        </li>
 
-  <div style="margin-top: 2em; color: red; font-weight: bold; font-size: 1.1em; text-align: center;">
-    ⚠️ documentation still in progress and will be added soon.
+        <li>
+          <h3><strong>K FACTOR / Soil Erodibility Factor</strong></h3>
+          <p>
+            The K factor describes the vulnerability of soil to erosion, influenced by its physical and chemical properties such as texture, organic matter, structure, and permeability.
+          </p>
+          <p>
+            <strong>Data source:</strong> I used raster datasets from <a href="https://soilgrids.org" target="_blank">SoilGrids</a>, which provide global coverage of soil properties in TIFF format suitable for GIS or Python-based analysis.
+          </p>
+          <p>
+            <strong>Formula applied:</strong> I adopted the Williams et al. (2000) equation:
+          </p>
+          <p style="margin-left: 20px; font-style: italic;">
+            K = f<sub>sand</sub> × f<sub>clay</sub> × f<sub>orgC</sub> × f<sub>silt</sub> × 0.1317
+          </p>
+          <p>
+            Each factor represents how a specific soil property contributes to erodibility:
+          </p>
+          <ul>
+            <li><strong>f<sub>sand</sub></strong>: contribution of sand content</li>
+            <li><strong>f<sub>clay</sub></strong>: influence of clay content</li>
+            <li><strong>f<sub>orgC</sub></strong>: role of organic carbon</li>
+            <li><strong>f<sub>silt</sub></strong>: impact of silt and textural balance</li>
+          </ul>
+          <p>
+            <strong>Why this method:</strong> I chose the Williams formula due to its compatibility with raster-based processing and its pixel-level estimation capabilities. The full coverage data from SoilGrids made this approach ideal.
+          </p>
+          <p>
+            <strong>Alternative approach – Kassam scenario:</strong> The Kassam method is generally used when data is collected from different field stations. K values are calculated at specific stations and interpolated (e.g., IDW) across the study area. 
+            This method suits field-sampled datasets but is less effective with raster data. Since my data was continuous and gridded, the raster-based method proved more efficient.
+          </p>
+          <p>
+            <strong>QGIS vs Python:</strong> While I initially attempted implementing the formula using QGIS's raster calculator, it proved cumbersome due to its limited formula flexibility. Python offered better control and efficiency for large raster datasets.
+          </p>
+        </li>
+      </ul>
+
+      <div style="margin-top: 2em; color: red; font-weight: bold; font-size: 1.1em; text-align: center;">
+        ⚠️ Documentation still in progress
+      </div>
+    </div>
   </div>
-</ul>
-</li>
-<li>
-  <h3><strong>K FACTOR / Soil Erodibility Factor</strong></h3>
-  <p>
-    The K factor quantifies the susceptibility of soil particles to detachment and transport by rainfall and runoff. 
-    It is influenced by soil texture (sand, silt, clay), organic matter, structure, and permeability.
-  </p>
-  <p>
-    <strong>Data source used:</strong> I used raster layers from <a href="https://soilgrids.org" target="_blank">SoilGrids</a> 
-    representing the spatial distribution of sand, silt, clay, and organic carbon content. These were downloaded as TIFF raster files suitable for GIS and Python-based processing.
-  </p>
-  <p>
-    <strong>Formula applied:</strong> I implemented the Williams et al. (2000) equation for the K-factor. This formula computes the erodibility value pixel by pixel using the following components:
-  </p>
-  <p style="margin-left: 20px; font-style: italic;">
-    K = f<sub>sand</sub> × f<sub>clay</sub> × f<sub>orgC</sub> × f<sub>silt</sub> × 0.1317
-  </p>
-  <p>
-    Each function accounts for specific soil characteristics:
-    <ul>
-      <li><strong>f<sub>sand</sub></strong>: effect of sand fraction</li>
-      <li><strong>f<sub>clay</sub></strong>: effect of clay content</li>
-      <li><strong>f<sub>orgC</sub></strong>: effect of organic carbon</li>
-      <li><strong>f<sub>silt</sub></strong>: effect of silt and texture balance</li>
-    </ul>
-  </p>
-  <p>
-    <strong>Reason for using this approach:</strong> I chose the Williams equation over the Kassam method because the raster-based formula allows for a more continuous and high-resolution estimation across the entire region. 
-    The Williams approach takes advantage of pixel-level data from SoilGrids, enabling direct application using Python.
-  </p>
-  <p>
-    The alternative <strong>Kassam approach</strong> is commonly used when data is only available at specific stations. 
-    In that method, K values are calculated or observed at a few field sites and then interpolated (e.g., using IDW or Kriging in QGIS) to estimate values for the rest of the study area. 
-    While suitable in field-sampled scenarios, this method was less ideal here due to the availability of full raster coverage, making the pixel-by-pixel Williams formula more accurate and computationally consistent.
-  </p>
-  <p>
-    <strong>Software used:</strong> I used Python for its flexibility and automation in processing multiple raster layers. While I attempted a QGIS-based approach, I encountered challenges managing the formula within raster calculator expressions. Therefore, Python proved more efficient.
-  </p>
-</li>
 </div>
-</div>
-</div>
+
     <div class="page">
     <h2>Comparative Topographic Analysis of Mount Kenya Ascent Routes : why there is no established climbing route via ragati near Karatina University</h2>
     <div class="page-body">
