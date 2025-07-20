@@ -158,8 +158,46 @@
   <strong>Note:</strong> The LS factor is essential in erosion modeling as it amplifies the soil loss based on terrain characteristics. Areas with long, steep slopes will have a higher LS value, indicating greater erosion potential.
 </p>
 </li>
-</ul>
+<li>
+  <h3><strong>C FACTOR / Cover Management Factor</strong></h3>
+  <p>
+    The C Factor in the RUSLE model represents the effect of vegetation and land cover on soil erosion rates. It reflects the degree to which land cover—such as grass, shrubs, cropland, or built-up areas—protects the soil from the erosive power of rainfall and surface runoff.
+  </p>
 
+  <p><strong>Approach used:</strong> I computed the C Factor by assigning values to each land cover class based on the <em>Dynamic World</em> classification from Google Earth Engine. Each class (e.g., water, cropland, grassland, etc.) was mapped to a corresponding C Factor value ranging from 0 (no erosion risk) to 1 (maximum erosion risk).</p>
+
+  <p><strong>Code Implementation:</strong> I wrote a Python script using <code>rasterio</code> and <code>numpy</code> to map LULC values to corresponding C Factor values and export the result as a raster. The script reads the LULC GeoTIFF, replaces each pixel value based on a predefined dictionary, and writes the new raster file to disk.</p>
+
+  <p><strong>Mapping of Dynamic World LULC codes to C values:</strong></p>
+  <ul>
+    <li>Water (0) → 0.0</li>
+    <li>Trees (1) → 0.002</li>
+    <li>Grass (2) → 0.025</li>
+    <li>Cropland (3) → 0.75</li>
+    <li>Shrub & Scrub (4) → 0.125</li>
+    <li>Built Area (5) → 0.0</li> <!-- Based on Dynamic World, Built sometimes shows low vegetation -->
+    <li>Bare Ground (6) → 1.0</li>
+    <li>Snow & Ice (7) → 0.0</li>
+    <li>Clouds (8) → 0.0</li>
+  </ul>
+
+  <p><strong>Validation and comparison:</strong> I verified the assigned values by inspecting individual areas in QGIS. The assigned C Factor values from Python matched those seen when manually inspecting the raster in QGIS, ensuring consistency across platforms.</p>
+
+  <p><strong>Documentation and supporting studies:</strong> While I used class-based assignment rather than NDVI, it’s important to note that many studies use NDVI to estimate the C Factor due to its dynamic representation of vegetation. For example, the study by <a href="https://www.mdpi.com/2071-1050/12/22/9740" target="_blank"> Benjamin K. Kogo(2020)</a> on Western Kenya explains that:</p>
+
+  <blockquote>
+    “The C-factor accounts for the contribution of land cover towards soil loss and is thus an essential and dynamic element of the RUSLE model. The Normalized Difference Vegetation Index (NDVI) is used to estimate the C-factor because of its dynamic nature. The C-factor has an inverse relationship with NDVI and was computed using the equation:<br><br>
+    <strong>C = exp[-a × (NDVI / (β − NDVI))]</strong><br>
+    where <em>a = 2</em> and <em>β = 1</em>.”
+  </blockquote>
+
+  <p><strong>Why not NDVI?</strong> I chose not to use NDVI because the Dynamic World land cover classification already captures detailed land use information suitable for estimating the C Factor. This also avoided the need for complex satellite image preprocessing.</p>
+
+  <p><strong>Software used:</strong> The computation was done in Python for automation and reproducibility. I also cross-verified the output in QGIS using the <em>Identify Features</em> tool to check the C values of different areas such as cropland, built-up, grassland, and bare ground.</p>
+
+  <p><strong>Conclusion:</strong> The C Factor plays a crucial role in RUSLE modeling. Its accurate estimation ensures that vegetation’s protective role is well captured. In this analysis, both automated (Python) and manual (QGIS) checks confirmed the reliability of the generated C Factor raster.</p>
+</li>
+</ul>
       <div style="margin-top: 2em; color: red; font-weight: bold; font-size: 1.1em; text-align: center;">
         ⚠️ Documentation still in progress
       </div>
