@@ -119,7 +119,46 @@
             <strong>QGIS vs Python:</strong> While I initially attempted implementing the formula using QGIS's raster calculator, it proved cumbersome due to its limited formula flexibility. Python offered better control and efficiency for large raster datasets.
           </p>
         </li>
-      </ul>
+          <li>
+  <h3><strong>LS FACTOR / Slope Length and Steepness Factor</strong></h3>
+<p>
+  The LS factor in the RUSLE model quantifies the impact of topography — specifically slope length and steepness — on soil erosion. It reflects how water accumulates and flows over a landscape, gaining erosive power as slope and contributing area increase.
+</p>
+<p>
+  <strong>Data source used:</strong> I derived the LS factor using a Digital Elevation Model (DEM) with a resolution of 30 meters. From this DEM, I generated slope, flow direction, and flow accumulation rasters. 
+</p>
+<p>
+  <strong>Formula applied:</strong> I used the <a href="https://johnwilson.usc.edu/wp-content/uploads/2016/09/Journal-of-Soil-and-Water-Conservation-1992-Moore-423-8.pdf" target="_blank">Moore and Burch (1986)</a> equation, which is widely adopted for pixel-based LS factor estimation:
+</p>
+<p style="margin-left: 20px; font-style: italic;">
+  LS = ((FlowAcc × CellSize) / 22.13)<sup>m</sup> × (sin(Slope) / 0.0896)<sup>n</sup>
+</p>
+<ul>
+  <li><strong>FlowAcc:</strong> Flow accumulation raster (number of upslope contributing cells)</li>
+  <li><strong>CellSize:</strong> Spatial resolution of DEM (e.g., 30m)</li>
+  <li><strong>Slope:</strong> Terrain slope in degrees (converted to radians for the sine function)</li>
+  <li><strong>m:</strong> Exponent typically between 0.4 and 0.6 depending on land characteristics (I used 0.4)</li>
+  <li><strong>n:</strong> Slope exponent, commonly 1.3</li>
+</ul>
+<p>
+  <strong>Software used:</strong> I implemented the LS factor calculation in Python using raster processing libraries for better control over mathematical operations and to automate the pixel-wise computation. 
+  Although QGIS can perform this analysis (especially using SAGA or GRASS tools like <em>“LS Factor”</em> or <em>“Slope Length and Steepness”</em>), I preferred Python for its reproducibility and flexibility in adjusting parameters.
+</p>
+
+<p><strong>Alternative using QGIS:</strong> The LS factor can also be calculated entirely within QGIS without writing code. This is done by using <em>SAGA</em> or <em>GRASS GIS</em> toolsets integrated into QGIS. The typical steps include:
+  <ol>
+    <li>Filling sinks in the DEM using <em>SAGA > Fill Sinks (Wang & Liu)</em>.</li>
+    <li>Generating a Flow Accumulation raster using <em>SAGA > Flow Accumulation (Top-Down)</em>.</li>
+    <li>Calculating the slope using <em>QGIS > Raster > Analysis > Slope</em> or <em>SAGA > Slope, Aspect, Curvature</em>.</li>
+    <li>Finally, computing the LS factor using <em>SAGA > LS Factor</em> tool, which directly applies the Moore and Burch (1986) method.</li>
+  </ol>
+  This alternative is ideal for users preferring a GUI workflow and integrates well with other QGIS geoprocessing tools. It provides fast visual feedback and doesn't require coding skills.
+</p>
+<p>
+  <strong>Note:</strong> The LS factor is essential in erosion modeling as it amplifies the soil loss based on terrain characteristics. Areas with long, steep slopes will have a higher LS value, indicating greater erosion potential.
+</p>
+</li>
+</ul>
 
       <div style="margin-top: 2em; color: red; font-weight: bold; font-size: 1.1em; text-align: center;">
         ⚠️ Documentation still in progress
