@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Alex">
+  <title>Streamflow Estimator 🌍</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+  <link rel="stylesheet" href="templates/dem.css">
+  <link rel="shortcut icon" href="img/fv.png" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Header + Nav -->
+  <div class="header-bar">
+    <div class="profile-header">
+      <div class="profile-container">
+        <img src="img/profile.jpeg" alt="Profile Picture" class="profile-pic">
+      </div>
+    </div>
+    <div class="nav-menu">
+      <ul>
+        <li><a href="index.html"><i class="fa-solid fa-house"></i></a></li>
+        <li><a href="about-me.html"><i class="fa-solid fa-info"></i></a></li>
+        <li><a href="contact-me.html"><i class="fa-solid fa-phone"></i></a></li>
+        <li><a href="Atlas.html"><i class="fas fa-atlas"></i></a></li>
+        <li><a href="game.html"><i class="fa-solid fa-gamepad"></i></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <div class="contact-section">
+      <div class="contact-header">
+        <h2>Streamflow Estimator 🌍</h2>
+        <div class="contact-gif">
+          <img src="img/tom call.gif" alt="Small GIF">
+        </div>
+      </div>
+
+      <!-- Estimator Form -->
+      <form class="contact-form" onsubmit="event.preventDefault(); runModel();">
+        <label>Place Name: <input type="text" id="place" placeholder="e.g Nairobi"></label><br><br>
+        <label>Latitude: <input type="text" id="lat" placeholder="Optional"></label><br>
+        <label>Longitude: <input type="text" id="lon" placeholder="Optional"></label><br><br>
+
+        <label>Rainfall Option:</label>
+        <select id="rainOption" onchange="toggleDateInputs()">
+          <option value="single">Single Day</option>
+          <option value="range">Date Range</option>
+        </select><br><br>
+
+        <label id="singleLabel">Select Date: <input type="date" id="date"></label>
+        <label id="rangeLabel" style="display:none;">
+          Start: <input type="date" id="startDate">
+          End: <input type="date" id="endDate">
+        </label><br><br>
+
+        <label>Catchment Area (km²): <input type="number" id="area" placeholder="e.g 10"></label><br><br>
+
+        <button type="submit">Run Model</button>
+      </form>
+
+      <!-- Output -->
+      <pre id="output"></pre>
+      <canvas id="rainChart" width="800" height="400"></canvas>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-copyright">Copyright © 2025- Alex Kimani</p>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    function toggleDateInputs() {
+      const option = document.getElementById("rainOption").value;
+      document.getElementById("singleLabel").style.display = option === "single" ? "inline" : "none";
+      document.getElementById("rangeLabel").style.display = option === "range" ? "inline" : "none";
+    }
+
+    function distanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2-lat1) * Math.PI/180;
+      const dLon = (lon2-lon1) * Math.PI/180;
+      const a = Math.sin(dLat/2)**2 +
+                Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180) *
+                Math.sin(dLon/2)**2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    function getLandCover(lat, lon) {
+      const cities = [
+        {name:"Nairobi", lat:-1.2921, lon:36.8219},
+        {name:"Mombasa", lat:-4.0435, lon:39.6682},
+        {name:"Kisumu", lat:-0.0917, lon:34.7670},
+        {name:"Eldoret", lat:0.5143, lon:35.2695},
+        {name:"Nakuru", lat:-0.3031, lon:36.0800}
+      ];
+      for (const city of cities) {
+        if(distanceKm(lat, lon, city.lat, city.lon) <= 15) return "Urban";
+      }
+      if(lat > -1.8 && lat < 1.0 && lon > 34.0 && lon < 37.5) return "Cropland";
+      return "Forest";
+    }
+
+    function getRunoffCoefficientRange(landcover) {
+      switch(landcover) {
+        case "Urban": return [0.7,0.9];
+        case "Cropland": return [0.3,0.5];
+        case "Forest": return [0.1,0.3];
+        default: return [0.2,0.4];
+      }
+    }
+
+    async function getCoordinates(place) {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}&limit=1`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if(data.length === 0) throw new Error("Place not found");
+      return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+    }
+
+    async function getElevation(lat, lon) {
+      const url = `https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data.elevation[0];
+    }
+
+    async function getRainfall(lat, lon, start, end) {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_sum&start_date=${start}&end_date=${end}&timezone=Africa/Nairobi`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if(!data || !data.daily || !data.daily.precipitation_sum) return [];
+      return { dates: data.daily.time, rainfall: data.daily.precipitation_sum };
+    }
+
+    function calculateStreamflow(P, C, A) { return P * C * A * 1000; }
+
+    async function runModel() {
+      let lat = document.getElementById("lat").value;
+      let lon = document.getElementById("lon").value;
+      const place = document.getElementById("place").value;
+      const area = parseFloat(document.getElementById("area").value);
+      const option = document.getElementById("rainOption").value;
+
+      try {
+        if(!lat || !lon) {
+          if(!place) throw new Error("Enter coordinates or place name");
+          const coords = await getCoordinates(place);
+          lat = coords.lat;
+          lon = coords.lon;
+        }
+        lat = parseFloat(lat); lon = parseFloat(lon);
+
+        const delta = 0.005;
+        const center = await getElevation(lat, lon);
+        const north = await getElevation(lat+delta, lon);
+        const south = await getElevation(lat-delta, lon);
+        const east = await getElevation(lat, lon+delta);
+        const west = await getElevation(lat, lon-delta);
+        const elevations = { Center:center, North:north, South:south, East:east, West:west };
+        let direction = "Center", min=center;
+        for(let k in elevations){ if(elevations[k]<min){ min=elevations[k]; direction=k; } }
+
+        const landcover = getLandCover(lat, lon);
+        const C_range = getRunoffCoefficientRange(landcover);
+        const C = (C_range[0]+C_range[1])/2;
+
+        let rainfallData=[], streamflowData=[], labels=[];
+        if(option==="single"){
+          const date = document.getElementById("date").value;
+          const rain = await getRainfall(lat, lon, date, date);
+          rainfallData.push(rain.rainfall[0]);
+          labels.push(date);
+          streamflowData.push(calculateStreamflow(rain.rainfall[0], C, area));
+        } else {
+          const start = document.getElementById("startDate").value;
+          const end = document.getElementById("endDate").value;
+          const rain = await getRainfall(lat, lon, start, end);
+          rainfallData = rain.rainfall;
+          labels = rain.dates;
+          streamflowData = rainfallData.map(r=>calculateStreamflow(r, C, area));
+        }
+
+        let result = `Location: ${place}\nCoordinates: (${lat.toFixed(4)},${lon.toFixed(4)})\n\n`;
+        result += "Elevation (m):\n"; for(let k in elevations) result += `${k}: ${elevations[k]}\n`;
+        result += `\nFlow Direction: ${direction}\n`;
+        result += `Land Cover: ${landcover}\nRunoff Coefficient (C): ${C_range[0]} - ${C_range[1]}\n\n`;
+        document.getElementById("output").textContent = result;
+
+        const ctx = document.getElementById('rainChart').getContext('2d');
+        new Chart(ctx, {
+          type:'line',
+          data:{
+            labels: labels,
+            datasets:[
+              { label:'Rainfall (mm)', data:rainfallData, borderColor:'blue', fill:false },
+              { label:'Estimated Streamflow (m³)', data:streamflowData, borderColor:'green', fill:false }
+            ]
+          },
+          options:{ responsive:true, interaction:{mode:'index', intersect:false}, stacked:false }
+        });
+
+      } catch(err){ document.getElementById("output").textContent = "Error: "+err; }
+    }
+  </script>
+</body>
+</html>
